@@ -39,6 +39,11 @@
             <v-icon v-else size="16" color="white">favorite_border</v-icon>
           </button>
 
+          <button class="pswp__button action-sphere hidden-shared-only" style="background: none;"
+                  :title="$gettext('Sphere')" @click.exact="onSphere">
+            <v-icon size="16" color="white">panorama_photosphere</v-icon>
+          </button>
+
           <button class="pswp__button pswp__button--fs action-toggle-fullscreen"
                   :title="$gettext('Fullscreen')"></button>
 
@@ -166,6 +171,32 @@ export default {
     },
     onLike() {
       this.item.toggleLike();
+    },
+    onSphere() {
+      // window.alert('COUCOU');
+      this.onPause();
+
+      const g = this.$viewer.gallery; // Gallery
+      let index = 0;
+
+      // remove duplicates
+      let filtered = g.items.filter(function (p, i, s) {
+        return !(i > 0 && p.UID === s[i - 1].UID);
+      });
+
+      let selection = filtered.map((p, i) => {
+        if (g.currItem.UID === p.UID) {
+          index = i;
+        }
+
+        return p.UID;
+      });
+
+      let album = null;
+
+      g.close(); // Close Gallery
+
+      Event.publish("dialog.sphere", {selection, album, index}); // Open Edit Dialog
     },
     onSelect() {
       this.$clipboard.toggle(this.item);

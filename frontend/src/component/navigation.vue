@@ -568,6 +568,8 @@
                      @confirm="upload.dialog = false"></p-upload-dialog>
     <p-photo-edit-dialog :show="edit.dialog" :selection="edit.selection" :index="edit.index" :album="edit.album"
                          @close="edit.dialog = false"></p-photo-edit-dialog>
+    <p-photo-sphere-dialog :show="sphere.dialog" :selection="sphere.selection" :index="sphere.index" :album="sphere.album"
+                         @close="sphere.dialog = false"></p-photo-sphere-dialog>
   </div>
 </template>
 
@@ -626,6 +628,12 @@ export default {
         selection: [],
         index: 0,
       },
+      sphere: {
+        dialog: false,
+        album: null,
+        selection: [],
+        index: 0,
+      },
       speedDial: false,
       rtl: this.$rtl,
       subscriptions: [],
@@ -658,6 +666,14 @@ export default {
         this.edit.index = data.index;
         this.edit.selection = data.selection;
         this.edit.album = data.album;
+      }
+    }));
+    this.subscriptions.push(Event.subscribe("dialog.sphere", (ev, data) => {
+      if (!this.sphere.dialog) {
+        this.sphere.dialog = true;
+        this.sphere.index = data.index;
+        this.sphere.selection = data.selection;
+        this.sphere.album = data.album;
       }
     }));
   },
